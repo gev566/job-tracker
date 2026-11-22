@@ -13,11 +13,13 @@
   --interview: #7a3fc4;
   --offer: #1c7c4a;
   --rejected: #c0362c;
+  --remind: #b25e00;
   --radius: 12px;
 }
 
+/* Тёмная тема: по настройке системы, если пользователь не выбрал светлую вручную */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme='light']) {
     --bg: #12151c;
     --surface: #1b202b;
     --text: #e8ebf2;
@@ -31,8 +33,31 @@
     --interview: #b792f5;
     --offer: #5fcf93;
     --rejected: #ff8479;
+    --remind: #f0a13a;
+    color-scheme: dark;
   }
 }
+
+/* Тёмная тема, выбранная вручную */
+:root[data-theme='dark'] {
+  --bg: #12151c;
+  --surface: #1b202b;
+  --text: #e8ebf2;
+  --muted: #9aa4b8;
+  --border: #2e3545;
+  --accent: #7f9bff;
+  --accent-text: #0e1220;
+  --danger: #ff8479;
+  --sent: #7f9bff;
+  --viewed: #e0b84a;
+  --interview: #b792f5;
+  --offer: #5fcf93;
+  --rejected: #ff8479;
+  --remind: #f0a13a;
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] { color-scheme: light; }
 
 * { box-sizing: border-box; }
 
@@ -159,12 +184,45 @@ textarea { resize: vertical; }
 .status--rejected { color: var(--rejected); border-color: var(--rejected); }
 
 .empty {
+  display: grid;
+  gap: 12px;
+  justify-items: center;
   text-align: center;
   color: var(--muted);
   padding: 32px 16px;
   border: 1px dashed var(--border);
   border-radius: var(--radius);
 }
+
+.header-actions { display: flex; gap: 8px; align-items: center; }
+.theme-select select { width: auto; background: var(--surface); font-size: 0.9rem; }
+
+.chip--remind { border-color: var(--remind); color: var(--remind); }
+.chip--remind[aria-pressed='true'] { background: var(--remind); border-color: var(--remind); color: var(--surface); }
+.remind { margin: 6px 0 0; font-size: 0.85rem; color: var(--remind); font-weight: 600; }
+
+.analytics { margin-bottom: 24px; }
+.analytics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+.panel {
+  margin: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+.panel figcaption { font-size: 0.85rem; color: var(--muted); margin-bottom: 12px; }
+
+.bars { list-style: none; margin: 0; padding: 0; display: flex; gap: 6px; align-items: flex-end; height: 160px; }
+.bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; min-width: 0; }
+.bar { width: 100%; max-width: 32px; min-height: 2px; background: var(--accent); border-radius: 6px 6px 2px 2px; }
+.bar-value { font-size: 0.75rem; font-weight: 600; font-variant-numeric: tabular-nums; min-height: 1.1em; }
+.bar-label { font-size: 0.7rem; color: var(--muted); margin-top: 4px; white-space: nowrap; }
+
+.funnel { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.funnel-head { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 4px; }
+.funnel-num { color: var(--muted); font-variant-numeric: tabular-nums; }
+.funnel-track { height: 10px; background: var(--bg); border-radius: 999px; overflow: hidden; }
+.funnel-fill { height: 100%; background: var(--interview); border-radius: 999px; transition: width 0.3s; }
 
 .footer { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 24px; }
 .message { margin: 0; color: var(--muted); font-size: 0.9rem; }
@@ -180,5 +238,6 @@ textarea { resize: vertical; }
 
 @media (max-width: 600px) {
   .card { flex-direction: column; }
+  .bar-label { font-size: 0.6rem; }
   .card-side { flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between; }
 }

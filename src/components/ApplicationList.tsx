@@ -3,6 +3,7 @@ import { STATUSES, STATUS_LABELS, type Application, type Status } from '../types
 
 interface ApplicationListProps {
   applications: Application[]
+  followUpIds: Set<string>
   onEdit: (application: Application) => void
   onDelete: (id: string) => void
   onStatusChange: (id: string, status: Status) => void
@@ -11,7 +12,7 @@ interface ApplicationListProps {
 const formatDate = (iso: string) =>
   new Date(`${iso}T00:00:00`).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' })
 
-export function ApplicationList({ applications, onEdit, onDelete, onStatusChange }: ApplicationListProps) {
+export function ApplicationList({ applications, followUpIds, onEdit, onDelete, onStatusChange }: ApplicationListProps) {
   // id отклика, для которого сейчас показан вопрос «Удалить?»
   const [confirmId, setConfirmId] = useState<string | null>(null)
 
@@ -36,6 +37,7 @@ export function ApplicationList({ applications, onEdit, onDelete, onStatusChange
             <p className="company">
               {item.company} · {formatDate(item.date)}
             </p>
+            {followUpIds.has(item.id) && <p className="remind">Ответа нет больше недели — можно напомнить о себе</p>}
             {item.note && <p className="note">{item.note}</p>}
           </div>
 
